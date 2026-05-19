@@ -5,15 +5,15 @@ import plotly.express as px
 from scipy.integrate import solve_ivp
 
 st.set_page_config(page_title="DO Crash Explorer", layout="wide")
-st.title("DO Crash Explorer: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
+st.title("Dissolved Oxygen Crash Explorer: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
 
 with st.sidebar:
-    st.header("Mass transfer")
+    st.header("Mass Transfer")
     kLa = st.slider("kLa (1/h)", 0.0, 500.0, 120.0, 1.0)
-    Cstar = st.slider("C* (mM)", 0.0, 0.50, 0.25, 0.01)
-    C0 = st.slider("Initial DO C0 (mM)", 0.0, 0.50, 0.20, 0.01)
+    Cstar = st.slider("C* [Saturated Dissolved Oxygen Concentration] (mM)", 0.0, 0.50, 0.25, 0.01)
+    C0 = st.slider("Initial Dissolved Oygen Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
-    st.header("Oxygen demand")
+    st.header("Oxygen Demand")
     OUR = st.slider("OUR (mM/h)", 0.0, 50.0, 10.0, 0.1)
 
     st.header("Simulation")
