@@ -74,7 +74,8 @@ with col1:
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
-    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="OTR and OUR")
+    fig = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], 
+              labels={"value": "Rate (mM/h)", "variable": "Metric"})
     st.plotly_chart(fig2, use_container_width=True)
 
 st.subheader("Results")
