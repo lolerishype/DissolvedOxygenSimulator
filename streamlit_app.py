@@ -74,7 +74,7 @@ with col1:
 
     fig1.update_layout(
         title_font_size=20,
-        title_x=0.25, # Centers the chart title
+        title_x=0.5, # Centers the chart title
         font_family="Computer Modern", 
         font_color="black",
         
@@ -95,7 +95,7 @@ with col2:
     
     fig2.update_layout(
         title_font_size=20,
-        title_x=0.25, # Centers the chart title
+        title_x=0.5, # Centers the chart title
         font_family="Computer Modern",  
         font_color="black",
         
