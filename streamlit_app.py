@@ -37,7 +37,7 @@ df = pd.DataFrame({"t (h)": t, "C (mM)": C, "OTR (mM/h)": OTR, "OUR (mM/h)": OUR
 
 # Metrics
 C_min = float(C.min())
-time_below = float(np.trapz((C < DO_min).astype(float), t))
+time_below = float(np.trapezoid((C < DO_min).astype(float), t))
 
 C_ss = np.nan
 if kLa > 1e-12:
