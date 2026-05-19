@@ -25,24 +25,33 @@ def rhs(t, y):
     C = y[0]
     return [kLa * (Cstar - C) - OUR]
 
-show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
-
 t_eval = np.linspace(0, tf, n)
-sol = solve_ivp(...)
+
+sol = solve_ivp(
+    fun=rhs,
+    t_span=(0.0, tf),
+    y0=[C0],
+    t_eval=t_eval,
+    method="LSODA",
+)
+
+if not sol.success:
+    st.error(sol.message)
+    st.stop()
 
 t_h = sol.t
-t_plot = 60*t_h if show_minutes else t_h
-t_label = "t (min)" if show_minutes else "t (h)"
 C = sol.y[0]
+
+show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
+t_plot = 60.0 * t_h if show_minutes else t_h
+t_label = "t (min)" if show_minutes else "t (h)"
+
 OTR = kLa * (Cstar - C)
 OUR_vec = np.full_like(t_h, OUR)
 
-df = pd.DataFrame({
-    t_label: t_plot, 
-    "C (mM)": C, 
-    "OTR (mM/h)": OTR, 
-    "OUR (mM/h)": OUR_vec
-})
+df = pd.DataFrame({t_label: t_plot, "C (mM)": C, "OTR (mM/h)": OTR, "OUR (mM/h)": OUR_vec})
+
+time_below = float(np.trapezoid((C < DO_min).astype(float), t_h))  # integrate in hours
 # This allows the label and plot to be dynamic of the user's choosing.
 
 # Metrics
