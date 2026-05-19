@@ -49,7 +49,12 @@ t_label = "t (min)" if show_minutes else "t (h)"
 OTR = kLa * (Cstar - C)
 OUR_vec = np.full_like(t_h, OUR)
 
-df = pd.DataFrame({t_label: t_plot, "C (mM)": C, "OTR (mM/h)": OTR, "OUR (mM/h)": OUR_vec})
+df = pd.DataFrame({
+    t_label: t_plot,
+    "C (mM)": C,
+    "OTR (mM/h)": OTR,
+    "OUR (mM/h)": OUR_vec
+})
 
 time_below = float(np.trapezoid((C < DO_min).astype(float), t_h))  # integrate in hours
 # This allows the label and plot to be dynamic of the user's choosing.
@@ -65,12 +70,12 @@ if kLa > 1e-12:
 col1, col2 = st.columns(2)
 
 with col1:
-    fig = px.line(df, x="t (h)", y="C (mM)", title="Dissolved Oxygen vs time")
+    fig = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen vs time")
     fig.add_hline(y=DO_min, line_dash="dash")
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
-    fig2 = px.line(df, x="t (h)", y=["OTR (mM/h)", "OUR (mM/h)"], title="OTR and OUR")
+    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="OTR and OUR")
     st.plotly_chart(fig2, use_container_width=True)
 
 st.subheader("Summary")
