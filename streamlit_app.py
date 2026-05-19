@@ -89,7 +89,7 @@ time_below = float(np.trapezoid((C < DO_min).astype(float), t_h)) # integrate in
 
 C_ss = np.nan # assume steady state does not exist first
 if kLa > 1e-12:
-    C_ss = Cstar - OUR_t[-1] / kLa  # steady-state if it exists
+    C_ss = Cstar - OUR_t[-1] / kLa  # steady-state if it exists (get final element)
 
 col1, col2 = st.columns(2)
 
