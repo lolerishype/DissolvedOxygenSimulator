@@ -153,7 +153,7 @@ if np.isnan(C_ss):
     c3.metric("Predicted steady-state DO", "N/A")
 else:
     c3.metric("Predicted steady-state DO", f"{C_ss:.2f} mM")
-c4.metric("Initial OTR", f"{(kLa*(Cstar-C0)):.2f} mM/h")
+c4.metric("Initial OTR", f"{(kLa*(Cstar-C0)):.0f} mM/h")
 
 if C_ss < 0:
     st.warning("Steady-state's dissolved oxygen is negative: oxygen demand exceeds transfer capacity.")
