@@ -169,12 +169,12 @@ with col2:
         font_color="black",
         
         legend=dict(
-            title_font_color="black"
+            title_font_color="black",
             orientation="h", # Horizontal layout
             yanchor="top",
             y=-0.2,                 
             xanchor="center",
-            x=0.5
+            x=0.5,
             ),
         
         xaxis=dict(
