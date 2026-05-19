@@ -98,25 +98,51 @@ with col1:
     fig1.add_hline(y=DO_min, line_dash="dash")
 
     fig1.update_layout(
-    title_font_size=20,
-    title_x=0.25, # Centers the chart title
-    font_family="Computer Modern",      
+        title_font_size=20,
+        title_x=0.5, 
+        title_xanchor="center",
+        font_family="Computer Modern", 
+        font_color="black",
+        
+        xaxis=dict(
+            title_font=dict(color="black"),
+            tickfont=dict(color="black")
+        ),
+        
+        yaxis=dict(
+            title_font=dict(color="black"),
+            tickfont=dict(color="black")
+        )
     )
     st.plotly_chart(fig1, use_container_width=True)
 
 with col2:
-    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Metric"})
+    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Oxygen Rate"})
+    
     fig2.update_layout(
-    title_font_size=20,
-    title_x=0.25, # Centers the chart title
-    font_family="Computer Modern",  
-    legend=dict(
-        orientation="h", # Horizontal layout
-        yanchor="bottom",
-        y=0.2,                 
-        xanchor="right",
-        x=1
-        )    
+        title_font_size=20,
+        title_x=0.5, 
+        title_xanchor="center",
+        font_family="Computer Modern",  
+        font_color="black",
+        
+        legend=dict(
+            orientation="h", # Horizontal layout
+            yanchor="bottom",
+            y=0.2,                 
+            xanchor="right",
+            x=1
+            ),
+        
+        xaxis=dict(
+            title_font=dict(color="black"),
+            tickfont=dict(color="black")
+        ),
+    
+        yaxis=dict(
+            title_font=dict(color="black"),
+            tickfont=dict(color="black")
+        )
     )
     st.plotly_chart(fig2, use_container_width=True)
 
