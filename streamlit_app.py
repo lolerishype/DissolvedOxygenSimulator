@@ -9,7 +9,7 @@ st.title("Dissolved Oxygen (DO) Crash Explorer: Oxygen Transfer (OTR) vs Oxygen 
 
 with st.sidebar:
     st.header("Mass Transfer")
-    kLa = st.slider("kLa (1/h)", 0.0, 500.0, 120.0, 1.0)
+    kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 0.0, 500.0, 120.0, 1.0)
     Cstar = st.slider("Saturated DO Concentration (mM)", 0.0, 0.50, 0.25, 0.01)
     C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
@@ -19,7 +19,7 @@ with st.sidebar:
     st.header("Simulation")
     tf = st.slider("End Time (h)", 0.1, 20.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
-    DO_min = st.slider("Minimum Safe Threshold of DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
+    DO_min = st.slider("Minimum Safe DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
 
 def rhs(t, y):
     C = y[0]
