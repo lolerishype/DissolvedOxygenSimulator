@@ -85,12 +85,12 @@ if sol.status == 1:
     # Check if substrate depleted
     if len(sol.t_events[0]) > 0:
         t_sub = sol.t_events[0][0]
-        st.info(f"Simulation stopped early: substrate depleted at t = {t_sub:.3f} h")
+        st.info(f"Simulation stopped early: substrate depleted at t = {t_sub:.3f} h.")
         
     # Check if oxygen depleted
     elif len(sol.t_events[1]) > 0:
         t_ox = sol.t_events[1][0]
-        st.info(f"Simulation stopped early: oxygen depleted (DO reached 0) at t = {t_ox:.3f} h")
+        st.info(f"Simulation stopped early: oxygen depleted (DO reached 0) at t = {t_ox:.3f} h.")
 
 t_h = sol.t
 C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
