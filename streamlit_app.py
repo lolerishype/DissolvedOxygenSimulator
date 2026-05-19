@@ -80,10 +80,10 @@ with col2:
 
 st.subheader("Summary")
 c1, c2, c3, c4 = st.columns(4)
-c1.metric("Safe DO Threshold (mM)", f"{C_min:.2f}")
-c2.metric("Time below safe DO threshold (h)", f"{time_below:.2f}")
-c3.metric("Predicted steady-state DO (mM)", f"{C_ss:.2f}")
-c4.metric("OTR at t=0 (mM/h)", f"{(kLa*(Cstar-C0)):.2f}")
+c1.metric("Safe DO Threshold (mM)", f"{C_min:.2f} mM")
+c2.metric("Hours below DO threshold", f"{time_below:.2f} hr")
+c3.metric("Predicted steady-state DO", f"{C_ss:.2f} mM")
+c4.metric("OTR at t=0", f"{(kLa*(Cstar-C0)):.2f} mM/h")
 
 if C_ss < 0:
     st.warning("Steady-state's dissolved oxygen is negative: oxygen demand exceeds transfer capacity.")
