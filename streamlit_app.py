@@ -86,9 +86,9 @@ with col2:
     title_x=0.25, # Centers the chart title
     font_family="Computer Modern",  
     legend=dict(
-        orientation="h",        # Horizontal layout
+        orientation="h", # Horizontal layout
         yanchor="bottom",
-        y=1.02,                 # Places it right above the chart
+        y=0.2,                 
         xanchor="right",
         x=1
         )    
