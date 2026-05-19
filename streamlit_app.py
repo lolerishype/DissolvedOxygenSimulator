@@ -157,7 +157,7 @@ with col2:
             orientation="h", # Horizontal layout
             yanchor="top",
             y=-0.2,                 
-            xanchor="centre",
+            xanchor="center",
             x=0.5
             ),
         
