@@ -71,12 +71,29 @@ col1, col2 = st.columns(2)
 with col1:
     fig1 = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen Over Time")
     fig1.add_hline(y=DO_min, line_dash="dash")
+
     fig1.update_layout(
     title_font_size=20,
     title_x=0.25, # Centers the chart title
     font_family="Computer Modern",      
     )
     st.plotly_chart(fig1, use_container_width=True)
+
+    fig1.update_xaxes(
+    showgrid=True, 
+    gridwidth=1, 
+    gridcolor='rgba(200, 200, 200, 0.3)', # Faint gridlines
+    linecolor='black',                   # Solid baseline
+    ticks="outside"
+    )
+
+    fig1.update_yaxes(
+    showgrid=True, 
+    gridwidth=1, 
+    gridcolor='rgba(200, 200, 200, 0.3)',
+    linecolor='black',
+    ticks="outside"
+    )
 
 with col2:
     fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Metric"})
