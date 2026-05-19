@@ -56,12 +56,24 @@ def rhs(t, y):
 
 t_eval = np.linspace(0, tf, n)
 
+S_min_stop = 1e-6  # mM, stop when essentially depleted
+
+def event_substrate_depleted(t, y):
+    C, X, S = y
+    return S - S_min_stop
+
+event_substrate_depleted.terminal = True
+event_substrate_depleted.direction = -1
+
 y0 = [C0, X0, S0]
-sol = solve_ivp(rhs, (0.0, tf), y0, t_eval=t_eval, method="LSODA")
+sol = solve_ivp(rhs, (0.0, tf), y0, t_eval=t_eval, method="LSODA", events=[event_substrate_depleted],)
 
 if not sol.success:
     st.error(sol.message)
     st.stop()
+
+if sol.status == 1 and len(sol.t_events[0]) > 0:
+    st.info(f"Simulation stopped early: substrate depleted at t = {sol.t_events[0][0]:.3f} h")
 
 t_h = sol.t
 C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
