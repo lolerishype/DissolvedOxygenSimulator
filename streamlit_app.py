@@ -63,17 +63,33 @@ def event_substrate_depleted(t, y):
     return S - S_min_stop
 
 event_substrate_depleted.terminal = True
-event_substrate_depleted.direction = -1
+event_substrate_depleted.direction = -1 # tells sim to only stop if S DROPPED to zero
+
+def do_dropped_to_zero(t, y):
+    C, X, S = y
+    return C
+
+do_dropped_to_zero.terminal = True
+do_dropped_to_zero.direction = -1
 
 y0 = [C0, X0, S0]
-sol = solve_ivp(rhs, (0.0, tf), y0, t_eval=t_eval, method="LSODA", events=[event_substrate_depleted],)
+sol = solve_ivp(rhs, (0.0, tf), y0, t_eval=t_eval, method="LSODA", events=[event_substrate_depleted, do_dropped_to_zero],)
 
 if not sol.success:
     st.error(sol.message)
     st.stop()
 
-if sol.status == 1 and len(sol.t_events[0]) > 0:
-    st.info(f"Simulation stopped early: substrate depleted at t = {sol.t_events[0][0]:.3f} h")
+# Check if the simulation stopped early due to an event
+if sol.status == 1:
+    # Check if substrate depleted
+    if len(sol.t_events[0]) > 0:
+        t_sub = sol.t_events[0][0]
+        st.info(f"Simulation stopped early: substrate depleted at t = {t_sub:.3f} h")
+        
+    # Check if oxygen depleted
+    elif len(sol.t_events[1]) > 0:
+        t_ox = sol.t_events[1][0]
+        st.info(f"Simulation stopped early: oxygen depleted (DO reached 0) at t = {t_ox:.3f} h")
 
 t_h = sol.t
 C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
