@@ -5,13 +5,13 @@ import plotly.express as px
 from scipy.integrate import solve_ivp
 
 st.set_page_config(page_title="DO Crash Explorer", layout="wide")
-st.title("Dissolved Oxygen Crash Explorer: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
+st.title("Dissolved Oxygen (DO) Crash Explorer: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
 
 with st.sidebar:
     st.header("Mass Transfer")
     kLa = st.slider("kLa (1/h)", 0.0, 500.0, 120.0, 1.0)
-    Cstar = st.slider("C* [Saturated Dissolved Oxygen Concentration] (mM)", 0.0, 0.50, 0.25, 0.01)
-    C0 = st.slider("Initial Dissolved Oygen Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
+    Cstar = st.slider("C* [Saturated DO Concentration] (mM)", 0.0, 0.50, 0.25, 0.01)
+    C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
     st.header("Oxygen Demand")
     OUR = st.slider("OUR (mM/h)", 0.0, 50.0, 10.0, 0.1)
@@ -70,7 +70,7 @@ if kLa > 1e-12:
 col1, col2 = st.columns(2)
 
 with col1:
-    fig = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen vs time")
+    fig = px.line(df, x=t_label, y="Concentration of Dissolved Oxygen (mM)", title="Dissolved Oxygen vs Time")
     fig.add_hline(y=DO_min, line_dash="dash")
     st.plotly_chart(fig, use_container_width=True)
 
@@ -80,14 +80,14 @@ with col2:
 
 st.subheader("Summary")
 c1, c2, c3, c4 = st.columns(4)
-c1.metric("Min DO (mM)", f"{C_min:.3f}")
-c2.metric("Time below DO_min (h)", f"{time_below:.2f}")
-c3.metric("Predicted steady-state DO (mM)", f"{C_ss:.3f}")
+c1.metric("Safe DO Threshold (mM)", f"{C_min:.2f}")
+c2.metric("Time below safe DO threshold (h)", f"{time_below:.2f}")
+c3.metric("Predicted steady-state DO (mM)", f"{C_ss:.2f}")
 c4.metric("OTR at t=0 (mM/h)", f"{(kLa*(Cstar-C0)):.2f}")
 
 if C_ss < 0:
-    st.warning("Steady-state DO is negative: oxygen demand exceeds transfer capacity (guaranteed crash).")
+    st.warning("Steady-state's dissolved oxygen is negative: oxygen demand exceeds transfer capacity.")
 elif C_ss < DO_min:
-    st.warning("Predicted steady-state DO is below DO_min: long-run oxygen limitation expected.")
+    st.warning("Steady-state's dissolved oxygen is below dissolved oxygen threshold: biological population decay expected.")
 else:
-    st.success("Predicted steady-state DO is above DO_min under constant conditions.")
+    st.success("Steady-state's dissolved oxygen is above dissolved oxygen threshold under constant conditions.")
