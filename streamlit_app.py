@@ -14,24 +14,21 @@ with st.sidebar:
     C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
     st.header("Oxygen Demand")   
-    mu_max = st.slider("mu_max (1/h)", 0.0, 2.0, 0.4, 0.01)
-    Ks     = st.slider("Ks (mM)", 0.0, 500.0, 10.0, 1.0)
-    Ko     = st.slider("Ko (mM)", 0.0, 0.50, 0.02, 0.005)
-    Yxs    = st.slider("Yx/s (gX per mM S) (scaled)", 1e-6, 10.0, 0.1)
+    mu_max = st.slider("Organism Maximum Growth Rate (1/h)", 0.0, 2.0, 0.4, 0.01)
+    Ks     = st.slider("Substrate Affinity Constant (mM)", 0.0, 500.0, 10.0, 1.0)
+    Ko     = st.slider("Oxygen Affinity Constant (mM)", 0.0, 0.50, 0.02, 0.005)
+    Yxs    = st.slider("Biomass Yield Coefficient (g of X / mM S) (scaled)", 1e-6, 10.0, 0.1)
+    X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
+    S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
+    
+    our_mode = st.selectbox("OUR definition", ["biomass-linked", "growth-linked"])
+    if our_mode == "biomass-linked": # if growth-linked, Yxs is sufficient
+        qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (gX·h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
 
     st.header("Simulation")
     tf = st.slider("End Time (h)", 0.1, 20.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
     DO_min = st.slider("Minimum Safe DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
-
-    X0 = st.slider("X0 (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
-    S0 = st.slider("S0 (mM)", 0.0, 1000.0, 100.0, 1.0)
-
-    our_mode = st.selectbox("OUR definition", ["biomass-linked", "growth-linked"])
-    if our_mode == "biomass-linked":
-        qO2 = st.slider("qO2 (mM O2 / (gX·h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
-    else:
-        YxO2 = st.slider("Yx/O2 (gX per mM O2) (scaled)", 1e-6, 10.0, 0.5)
 
 def rhs(t, y):
     C, X, S = y
