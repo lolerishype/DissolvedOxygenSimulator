@@ -51,7 +51,7 @@ OUR_vec = np.full_like(t_h, OUR)
 
 df = pd.DataFrame({
     t_label: t_plot,
-    "C (mM)": C,
+    "Concentration of Dissolved Oxygen (mM)": C,
     "OTR (mM/h)": OTR,
     "OUR (mM/h)": OUR_vec
 })
