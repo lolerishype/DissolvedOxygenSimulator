@@ -56,12 +56,11 @@ df = pd.DataFrame({
     "OUR (mM/h)": OUR_vec
 })
 
-time_below = float(np.trapezoid((C < DO_min).astype(float), t_h))  # integrate in hours
 # This allows the label and plot to be dynamic of the user's choosing.
 
 # Metrics
 C_min = float(C.min())
-time_below = float(np.trapezoid((C < DO_min).astype(float), t_h))
+time_below = float(np.trapezoid((C < DO_min).astype(float), t_h)) # integrate in hours
 
 C_ss = np.nan
 if kLa > 1e-12:
