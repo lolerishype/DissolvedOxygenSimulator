@@ -28,7 +28,7 @@ with st.sidebar:
         YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.5)
 
     st.header("Simulation")
-    tf = st.slider("End Time (h)", 0.1, 20.0, 6.0, 0.1)
+    tf = st.slider("End Time (h)", 0.1, 24.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
     DO_min = st.slider("Minimum Safe DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
 
