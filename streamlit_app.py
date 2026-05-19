@@ -1,6 +1,69 @@
+import numpy as np
+import pandas as pd
 import streamlit as st
+import plotly.express as px
+from scipy.integrate import solve_ivp
 
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
+st.set_page_config(page_title="DO Crash Explorer", layout="wide")
+st.title("DO Crash Explorer: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
+
+with st.sidebar:
+    st.header("Mass transfer")
+    kLa = st.slider("kLa (1/h)", 0.0, 500.0, 120.0, 1.0)
+    Cstar = st.slider("C* (mM)", 0.0, 0.50, 0.25, 0.01)
+    C0 = st.slider("Initial DO C0 (mM)", 0.0, 0.50, 0.20, 0.01)
+
+    st.header("Oxygen demand")
+    OUR = st.slider("OUR (mM/h)", 0.0, 50.0, 10.0, 0.1)
+
+    st.header("Simulation")
+    tf = st.slider("End time (h)", 0.1, 20.0, 6.0, 0.1)
+    n = st.slider("Time points", 100, 2000, 600, 50)
+    DO_min = st.slider("DO_min (mM)", 0.0, 0.30, 0.05, 0.01)
+
+def rhs(t, y):
+    C = y[0]
+    return [kLa * (Cstar - C) - OUR]
+
+t_eval = np.linspace(0, tf, n)
+sol = solve_ivp(rhs, (0, tf), [C0], t_eval=t_eval, method="LSODA")
+
+t = sol.t
+C = sol.y[0]
+OTR = kLa * (Cstar - C)
+OUR_vec = np.full_like(t, OUR)
+
+df = pd.DataFrame({"t (h)": t, "C (mM)": C, "OTR (mM/h)": OTR, "OUR (mM/h)": OUR_vec})
+
+# Metrics
+C_min = float(C.min())
+time_below = float(np.trapz((C < DO_min).astype(float), t))
+
+C_ss = np.nan
+if kLa > 1e-12:
+    C_ss = Cstar - OUR / kLa  # steady-state if it exists
+
+col1, col2 = st.columns(2)
+
+with col1:
+    fig = px.line(df, x="t (h)", y="C (mM)", title="Dissolved Oxygen vs time")
+    fig.add_hline(y=DO_min, line_dash="dash")
+    st.plotly_chart(fig, use_container_width=True)
+
+with col2:
+    fig2 = px.line(df, x="t (h)", y=["OTR (mM/h)", "OUR (mM/h)"], title="OTR and OUR")
+    st.plotly_chart(fig2, use_container_width=True)
+
+st.subheader("Summary")
+c1, c2, c3, c4 = st.columns(4)
+c1.metric("Min DO (mM)", f"{C_min:.3f}")
+c2.metric("Time below DO_min (h)", f"{time_below:.2f}")
+c3.metric("Predicted steady-state DO (mM)", f"{C_ss:.3f}")
+c4.metric("OTR at t=0 (mM/h)", f"{(kLa*(Cstar-C0)):.2f}")
+
+if C_ss < 0:
+    st.warning("Steady-state DO is negative: oxygen demand exceeds transfer capacity (guaranteed crash).")
+elif C_ss < DO_min:
+    st.warning("Predicted steady-state DO is below DO_min: long-run oxygen limitation expected.")
+else:
+    st.success("Predicted steady-state DO is above DO_min under constant conditions.")
