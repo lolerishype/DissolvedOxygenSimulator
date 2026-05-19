@@ -79,22 +79,6 @@ with col1:
     )
     st.plotly_chart(fig1, use_container_width=True)
 
-    fig1.update_xaxes(
-    showgrid=True, 
-    gridwidth=1, 
-    gridcolor='rgba(200, 200, 200, 0.3)', # Faint gridlines
-    linecolor='black',                   # Solid baseline
-    ticks="outside"
-    )
-
-    fig1.update_yaxes(
-    showgrid=True, 
-    gridwidth=1, 
-    gridcolor='rgba(200, 200, 200, 0.3)',
-    linecolor='black',
-    ticks="outside"
-    )
-
 with col2:
     fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Metric"})
     fig2.update_layout(
@@ -103,6 +87,15 @@ with col2:
     font_family="Computer Modern",      
     )
     st.plotly_chart(fig2, use_container_width=True)
+    fig2.update_layout( # fit legend in chart
+    legend=dict(
+        orientation="h",        # Horizontal layout
+        yanchor="bottom",
+        y=1.02,                 # Places it right above the chart
+        xanchor="right",
+        x=1
+        )
+    )
 
 st.subheader("Results")
 c1, c2, c3, c4 = st.columns(4)
