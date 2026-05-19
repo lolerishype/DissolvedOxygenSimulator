@@ -13,47 +13,72 @@ with st.sidebar:
     Cstar = st.slider("Saturated DO Concentration (mM)", 0.0, 0.50, 0.25, 0.01)
     C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
-    st.header("Oxygen Demand")
-    OUR = st.slider("OUR (mM/h)", 0.0, 50.0, 10.0, 0.1)
+    st.header("Oxygen Demand")   
+    mu_max = st.slider("mu_max (1/h)", 0.0, 2.0, 0.4, 0.01)
+    Ks     = st.slider("Ks (mM)", 0.0, 500.0, 10.0, 1.0)
+    Ko     = st.slider("Ko (mM)", 0.0, 0.50, 0.02, 0.005)
+    Yxs    = st.slider("Yx/s (gX per mM S) (scaled)", 1e-6, 10.0, 0.1)
 
     st.header("Simulation")
     tf = st.slider("End Time (h)", 0.1, 20.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
     DO_min = st.slider("Minimum Safe DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
 
+    X0 = st.slider("X0 (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
+    S0 = st.slider("S0 (mM)", 0.0, 1000.0, 100.0, 1.0)
+
+    our_mode = st.selectbox("OUR definition", ["biomass-linked", "growth-linked"])
+    if our_mode == "biomass-linked":
+        qO2 = st.slider("qO2 (mM O2 / (gX·h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
+    else:
+        YxO2 = st.slider("Yx/O2 (gX per mM O2) (scaled)", 1e-6, 10.0, 0.5)
+
 def rhs(t, y):
-    C = y[0]
-    return [kLa * (Cstar - C) - OUR]
+    C, X, S = y
+
+    # Prevent negative values from causing weird kinetics
+    C = max(C, 0.0)
+    X = max(X, 0.0)
+    S = max(S, 0.0)
+
+    mu = mu_max * (S / (Ks + S + 1e-12)) * (C / (Ko + C + 1e-12))
+
+    dX = mu * X
+    dS = -(1.0 / Yxs) * mu * X
+
+    if our_mode == "biomass-linked":
+        OUR = qO2 * X  # mM/h
+    else:  # growth-linked
+        OUR = (1.0 / YxO2) * mu * X  # mM/h
+
+    dC = kLa * (Cstar - C) - OUR
+
+    return [dC, dX, dS]
 
 t_eval = np.linspace(0, tf, n)
 
-sol = solve_ivp(
-    fun=rhs,
-    t_span=(0.0, tf),
-    y0=[C0],
-    t_eval=t_eval,
-    method="LSODA",
-)
+y0 = [C0, X0, S0]
+sol = solve_ivp(rhs, (0.0, tf), y0, t_eval=t_eval, method="LSODA")
 
 if not sol.success:
     st.error(sol.message)
     st.stop()
 
 t_h = sol.t
-C = sol.y[0]
+C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
+mu_t = mu_max * (S/(Ks+S+1e-12)) * (C/(Ko+C+1e-12))
+OUR_t = qO2*X if our_mode=="biomass-linked" else (1.0/YxO2)*mu_t*X
+OTR_t = kLa*(Cstar - C)
 
 show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
 t_plot = 60.0 * t_h if show_minutes else t_h
 t_label = "t (min)" if show_minutes else "t (h)"
 
-OTR = kLa * (Cstar - C)
-OUR_vec = np.full_like(t_h, OUR)
-
 df = pd.DataFrame({
     t_label: t_plot,
     "C (mM)": C,
-    "OTR (mM/h)": OTR,
-    "OUR (mM/h)": OUR_vec
+    "OTR (mM/h)": OTR_t,
+    "OUR (mM/h)": OUR_t
 })
 
 # This allows the label and plot to be dynamic of the user's choosing.
@@ -64,7 +89,7 @@ time_below = float(np.trapezoid((C < DO_min).astype(float), t_h)) # integrate in
 
 C_ss = np.nan
 if kLa > 1e-12:
-    C_ss = Cstar - OUR / kLa  # steady-state if it exists
+    C_ss = Cstar - OUR_t / kLa  # steady-state if it exists
 
 col1, col2 = st.columns(2)
 
