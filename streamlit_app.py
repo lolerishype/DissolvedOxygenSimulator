@@ -25,19 +25,29 @@ def rhs(t, y):
     C = y[0]
     return [kLa * (Cstar - C) - OUR]
 
-t_eval = np.linspace(0, tf, n)
-sol = solve_ivp(rhs, (0, tf), [C0], t_eval=t_eval, method="LSODA")
+show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
 
-t = sol.t
+t_eval = np.linspace(0, tf, n)
+sol = solve_ivp(...)
+
+t_h = sol.t
+t_plot = 60*t_h if show_minutes else t_h
+t_label = "t (min)" if show_minutes else "t (h)"
 C = sol.y[0]
 OTR = kLa * (Cstar - C)
-OUR_vec = np.full_like(t, OUR)
+OUR_vec = np.full_like(t_h, OUR)
 
-df = pd.DataFrame({"t (h)": t, "C (mM)": C, "OTR (mM/h)": OTR, "OUR (mM/h)": OUR_vec})
+df = pd.DataFrame({
+    t_label: t_plot, 
+    "C (mM)": C, 
+    "OTR (mM/h)": OTR, 
+    "OUR (mM/h)": OUR_vec
+})
+# This allows the label and plot to be dynamic of the user's choosing.
 
 # Metrics
 C_min = float(C.min())
-time_below = float(np.trapezoid((C < DO_min).astype(float), t))
+time_below = float(np.trapezoid((C < DO_min).astype(float), t_h))
 
 C_ss = np.nan
 if kLa > 1e-12:
