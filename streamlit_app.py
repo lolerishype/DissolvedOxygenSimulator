@@ -84,18 +84,16 @@ with col2:
     fig2.update_layout(
     title_font_size=20,
     title_x=0.25, # Centers the chart title
-    font_family="Computer Modern",      
-    )
-    st.plotly_chart(fig2, use_container_width=True)
-    fig2.update_layout( # fit legend in chart
+    font_family="Computer Modern",  
     legend=dict(
         orientation="h",        # Horizontal layout
         yanchor="bottom",
         y=1.02,                 # Places it right above the chart
         xanchor="right",
         x=1
-        )
+        )    
     )
+    st.plotly_chart(fig2, use_container_width=True)
 
 st.subheader("Results")
 c1, c2, c3, c4 = st.columns(4)
