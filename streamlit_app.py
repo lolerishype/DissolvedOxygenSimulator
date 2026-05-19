@@ -72,10 +72,9 @@ with col1:
     fig = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen Over Time")
     fig.add_hline(y=DO_min, line_dash="dash")
     fig.update_layout(
-    template="plotly_white",  # Clean, minimalist background
     title_font_size=20,
-    title_x=0.5,              # Centers the chart title
-    font_family="Arial",      # Clean typography
+    title_x=0.25, # Centers the chart title
+    font_family="Computer Modern",      
     )
     st.plotly_chart(fig, use_container_width=True)
 
