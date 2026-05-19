@@ -155,10 +155,10 @@ with col2:
         
         legend=dict(
             orientation="h", # Horizontal layout
-            yanchor="bottom",
-            y=0.2,                 
-            xanchor="right",
-            x=1
+            yanchor="top",
+            y=-0.2,                 
+            xanchor="centre",
+            x=0.5
             ),
         
         xaxis=dict(
