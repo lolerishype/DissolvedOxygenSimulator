@@ -91,7 +91,7 @@ with col1:
     st.plotly_chart(fig1, use_container_width=True)
 
 with col2:
-    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Metric"})
+    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Oxygen Rate"})
     
     fig2.update_layout(
         title_font_size=20,
