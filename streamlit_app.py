@@ -87,7 +87,7 @@ df = pd.DataFrame({
 C_min = float(C.min())
 time_below = float(np.trapezoid((C < DO_min).astype(float), t_h)) # integrate in hours
 
-C_ss = np.nan
+C_ss = np.nan # assume steady state does not exist first
 if kLa > 1e-12:
     C_ss = Cstar - OUR_t / kLa  # steady-state if it exists
 
@@ -150,7 +150,10 @@ st.subheader("Results")
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Safe DO Threshold", f"{C_min:.2f} mM")
 c2.metric("Hours below DO threshold", f"{time_below:.2f} hr")
-c3.metric("Predicted steady-state DO", f"{C_ss:.2f} mM")
+if np.isnan(C_ss): 
+    c3.metric("Predicted steady-state DO", "N/A")
+else:
+    c3.metric("Predicted steady-state DO", f"{C_ss:.2f} mM")
 c4.metric("Initial OTR", f"{(kLa*(Cstar-C0)):.2f} mM/h")
 
 if C_ss < 0:
