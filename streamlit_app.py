@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 import plotly.express as px
 from scipy.integrate import solve_ivp
 
