@@ -80,6 +80,11 @@ with col1:
 
 with col2:
     fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Metric"})
+    fig.update_layout(
+    title_font_size=20,
+    title_x=0.25, # Centers the chart title
+    font_family="Computer Modern",      
+    )
     st.plotly_chart(fig2, use_container_width=True)
 
 st.subheader("Results")
