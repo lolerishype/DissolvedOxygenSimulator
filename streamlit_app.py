@@ -89,7 +89,7 @@ time_below = float(np.trapezoid((C < DO_min).astype(float), t_h)) # integrate in
 
 C_ss = np.nan # assume steady state does not exist first
 if kLa > 1e-12:
-    C_ss = Cstar - OUR_t / kLa  # steady-state if it exists
+    C_ss = Cstar - OUR_t[-1] / kLa  # steady-state if it exists
 
 col1, col2 = st.columns(2)
 
@@ -148,7 +148,7 @@ with col2:
 
 st.subheader("Results")
 c1, c2, c3, c4 = st.columns(4)
-c1.metric("Safe DO Threshold", f"{C_min:.2f} mM")
+c1.metric("Observed DO Threshold", f"{C_min:.2f} mM")
 c2.metric("Hours below DO threshold", f"{time_below:.2f} hr")
 if np.isnan(C_ss): 
     c3.metric("Predicted steady-state DO", "N/A")
