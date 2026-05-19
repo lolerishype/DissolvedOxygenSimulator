@@ -105,6 +105,7 @@ t_label = "t (min)" if show_minutes else "t (h)"
 df = pd.DataFrame({
     t_label: t_plot,
     "C (mM)": C,
+    "X (g/L)": X,
     "OTR (mM/h)": OTR_t,
     "OUR (mM/h)": OUR_t
 })
@@ -123,12 +124,15 @@ col1, col2 = st.columns(2)
 
 with col1:
     fig1 = px.line(
-        df, 
-        x=t_label, 
-        y="C (mM)", 
-        title="Dissolved Oxygen Over Time"
-        )
+        df,
+        x=t_label,
+        y=["Biomass (g/L)", "DO Concentration (mM)"], # Plot them together to see food go down as population goes up!
+        title="Biomass Growth and Oxygen Consumption",
+        labels={"value": "Biomass", "variable": "Oxygen"}
+    )
     fig1.add_hline(y=DO_min, line_dash="dash")
+    
+    fig1.update_traces(patch={"line": {"color": "blue"}}, selector={"name": "Biomass (g/L)"})
 
     fig1.update_layout(
         title_font_size=20,
