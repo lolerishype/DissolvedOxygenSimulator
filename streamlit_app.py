@@ -5,7 +5,7 @@ import plotly.express as px
 from scipy.integrate import solve_ivp
 
 st.set_page_config(page_title="DO Crash Explorer", layout="wide")
-st.title("Mocrorganism Growth and Dissolved Oxygen (DO) Relation Simulator: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
+st.title("Microrganism Growth and Dissolved Oxygen (DO) Relation Simulator: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)")
 
 with st.sidebar:
     st.header("Mass Transfer")
