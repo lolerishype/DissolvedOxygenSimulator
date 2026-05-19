@@ -127,7 +127,7 @@ with col1:
         df,
         x=t_label,
         y=["Biomass (g/L)", "DO Concentration (mM)"],  
-        title="Biomass and Oxygen Temporal Relation",
+        title="Biomass and Oxygen Relation",
         labels={"value": "Concentrations", "variable": "Concentration Type"}
     )
     fig1.add_hline(y=DO_min, line_dash="dash")
