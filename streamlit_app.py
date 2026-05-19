@@ -122,7 +122,12 @@ if kLa > 1e-12:
 col1, col2 = st.columns(2)
 
 with col1:
-    fig1 = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen Over Time")
+    fig1 = px.line(
+        df, 
+        x=t_label, 
+        y="C (mM)", 
+        title="Dissolved Oxygen Over Time"
+        )
     fig1.add_hline(y=DO_min, line_dash="dash")
 
     fig1.update_layout(
@@ -145,15 +150,16 @@ with col1:
     st.plotly_chart(fig1, use_container_width=True)
 
 with col2:
-    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Oxygen Rate"})
-    
-    fig2.add_trace(
-        go.Scatter(
-            x=sol.t, 
-            y=OUR_t,  
-            line=dict(color="red")  
-        )
+    fig2 = px.line(
+        df, 
+        x=t_label, 
+        y=["OTR (mM/h)", "OUR (mM/h)"], 
+        title="Oxygen Rates Over Time", 
+        labels={"value": "Rate (mM/h)", "variable": "Oxygen Rate"}
     )
+    
+    fig2.update_traces(patch={"line": {"color": "green"}}, selector={"name": "OTR (mM/h)"})
+    fig2.update_traces(patch={"line": {"color": "red"}}, selector={"name": "OUR (mM/h)"})
     
     fig2.update_layout(
         title_font_size=20,
@@ -163,6 +169,7 @@ with col2:
         font_color="black",
         
         legend=dict(
+            title_font_color="black"
             orientation="h", # Horizontal layout
             yanchor="top",
             y=-0.2,                 
