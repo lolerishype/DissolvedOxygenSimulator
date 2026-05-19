@@ -45,7 +45,7 @@ def rhs(t, y):
     dX = mu * X
     dS = -(1.0 / Yxs) * mu * X
 
-    if our_mode == "biomass-linked":
+    if our_mode == "Biomass Linked":
         OUR = qO2 * X  # mM/h
     else:  # growth-linked
         OUR = (1.0 / YxO2) * mu * X  # mM/h
@@ -66,7 +66,7 @@ if not sol.success:
 t_h = sol.t
 C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
 mu_t = mu_max * (S/(Ks+S+1e-12)) * (C/(Ko+C+1e-12))
-OUR_t = qO2*X if our_mode=="biomass-linked" else (1.0/YxO2)*mu_t*X
+OUR_t = qO2*X if our_mode=="Biomass Linked" else (1.0/YxO2)*mu_t*X
 OTR_t = kLa*(Cstar - C)
 
 show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
