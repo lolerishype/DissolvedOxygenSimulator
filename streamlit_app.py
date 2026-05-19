@@ -21,10 +21,10 @@ with st.sidebar:
     X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
     S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
 
-    our_mode = st.selectbox("OUR definition", ["biomass-linked", "growth-linked"])
-    if our_mode == "biomass-linked": # if growth-linked, Yxs is sufficient
+    our_mode = st.selectbox("Oxygen Uptake Definition", ["Biomass Linked", "Growth Linked"])
+    if our_mode == "Biomass Linked": 
         qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (gX·h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
-    else:
+    else: # if growth-linked, Yxs is sufficient
         YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.5)
 
     st.header("Simulation")
