@@ -51,7 +51,7 @@ OUR_vec = np.full_like(t_h, OUR)
 
 df = pd.DataFrame({
     t_label: t_plot,
-    "Concentration of Dissolved Oxygen (mM)": C,
+    "C (mM)": C,
     "OTR (mM/h)": OTR,
     "OUR (mM/h)": OUR_vec
 })
@@ -70,7 +70,7 @@ if kLa > 1e-12:
 col1, col2 = st.columns(2)
 
 with col1:
-    fig = px.line(df, x=t_label, y="Concentration of Dissolved Oxygen (mM)", title="Dissolved Oxygen vs Time")
+    fig = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen vs Time")
     fig.add_hline(y=DO_min, line_dash="dash")
     st.plotly_chart(fig, use_container_width=True)
 
