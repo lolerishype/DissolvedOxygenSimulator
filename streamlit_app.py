@@ -184,8 +184,8 @@ else:
 c4.metric("Initial OTR", f"{(kLa*(Cstar-C0)):.0f} mM/h")
 
 if C_ss < 0:
-    st.warning("Steady-state's dissolved oxygen is negative: oxygen demand exceeds transfer capacity.")
+    st.warning("Steady-state's dissolved oxygen concentration is negative: oxygen demand exceeds transfer capacity.")
 elif C_ss < DO_min:
-    st.warning("Steady-state's dissolved oxygen is below dissolved oxygen threshold: biological population decay expected.")
+    st.warning("Steady-state's dissolved oxygen concentration is below dissolved oxygen threshold: biological population decay expected.")
 else:
-    st.success("The dissolved oxygen is above dissolved oxygen threshold for the given time period.")
+    st.success("The dissolved oxygen concentration is above dissolved oxygen threshold for the given time period.")
