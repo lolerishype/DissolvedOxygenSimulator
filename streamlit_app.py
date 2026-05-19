@@ -172,4 +172,4 @@ if C_ss < 0:
 elif C_ss < DO_min:
     st.warning("Steady-state's dissolved oxygen is below dissolved oxygen threshold: biological population decay expected.")
 else:
-    st.success("Steady-state's dissolved oxygen is above dissolved oxygen threshold under constant conditions.")
+    st.success("The dissolved oxygen is above dissolved oxygen threshold for the given time period.")
