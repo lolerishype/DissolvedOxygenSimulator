@@ -9,7 +9,7 @@ st.set_page_config(page_title="DO Crash Explorer", layout="wide",)
 st.markdown("<h1 style='text-align: center;'>Microorganism Growth and Dissolved Oxygen (DO) Relation Simulator: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)</h1>", unsafe_allow_html=True)
 
 with st.sidebar:
-    st.header("Mass Transfer")
+    st.header("Oxygen Transfer")
     kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 0.0, 500.0, 250.0, 1.0)
     Cstar = st.slider("Saturated DO Concentration (mM)", 0.0, 1.0, 0.25, 0.01)
     C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
