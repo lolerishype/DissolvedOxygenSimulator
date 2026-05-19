@@ -9,14 +9,14 @@ st.title("Microrganism Growth and Dissolved Oxygen (DO) Relation Simulator: Oxyg
 
 with st.sidebar:
     st.header("Mass Transfer")
-    kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 0.0, 500.0, 120.0, 1.0)
-    Cstar = st.slider("Saturated DO Concentration (mM)", 0.0, 0.50, 0.25, 0.01)
+    kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 0.0, 500.0, 250.0, 1.0)
+    Cstar = st.slider("Saturated DO Concentration (mM)", 0.0, 1.0, 0.25, 0.01)
     C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
     st.header("Oxygen Demand")   
     mu_max = st.slider("Organism Maximum Growth Rate (1/h)", 0.0, 2.0, 0.4, 0.01)
-    Ks     = st.slider("Substrate Affinity Constant (mM)", 0.0, 500.0, 10.0, 1.0)
-    Ko     = st.slider("Oxygen Affinity Constant (mM)", 0.0, 0.50, 0.02, 0.005)
+    Ks     = st.slider("Substrate Affinity Constant (mM)", 0.0, 10.0, 0.5, 1.0)
+    Ko     = st.slider("Oxygen Affinity Constant (mM)", 0.0, 1.0, 0.05, 0.005)
     Yxs    = st.slider("Biomass Yield Coefficient on Substrate (g of X / mM S) (scaled)", 1e-6, 10.0, 0.1)
     X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
     S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
@@ -25,10 +25,10 @@ with st.sidebar:
     if our_mode == "Biomass Linked": 
         qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (g of X · h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
     else: # if growth-linked, Yxs is sufficient
-        YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.5)
+        YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.05)
 
     st.header("Simulation")
-    tf = st.slider("End Time (h)", 0.1, 24.0, 6.0, 0.1)
+    tf = st.slider("End Time (h)", 0.1, 48.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
     DO_min = st.slider("Minimum Safe DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
 
