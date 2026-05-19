@@ -69,12 +69,18 @@ if kLa > 1e-12:
 col1, col2 = st.columns(2)
 
 with col1:
-    fig = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen vs Time")
+    fig = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen Over Time")
     fig.add_hline(y=DO_min, line_dash="dash")
+    fig.update_layout(
+    template="plotly_white",  # Clean, minimalist background
+    title_font_size=20,
+    title_x=0.5,              # Centers the chart title
+    font_family="Arial",      # Clean typography
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
-    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], labels={"value": "Rate (mM/h)", "variable": "Metric"})
+    fig2 = px.line(df, x=t_label, y=["OTR (mM/h)", "OUR (mM/h)"], title="Oxygen Rates Over Time", labels={"value": "Rate (mM/h)", "variable": "Metric"})
     st.plotly_chart(fig2, use_container_width=True)
 
 st.subheader("Results")
