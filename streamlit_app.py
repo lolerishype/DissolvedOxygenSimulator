@@ -14,7 +14,7 @@ with st.sidebar:
     C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
 
     st.header("Oxygen Demand")
-    OUR = st.slider("OUR (mM/h)", 0.0, 50.0, 10.0, 0.1)
+    OUR = st.slider("Oxygen Usage Rate (mM/h)", 0.0, 50.0, 10.0, 0.1)
 
     st.header("Simulation")
     tf = st.slider("End Time (h)", 0.1, 20.0, 6.0, 0.1)
