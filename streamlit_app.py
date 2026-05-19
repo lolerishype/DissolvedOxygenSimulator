@@ -17,10 +17,10 @@ with st.sidebar:
     mu_max = st.slider("Organism Maximum Growth Rate (1/h)", 0.0, 2.0, 0.4, 0.01)
     Ks     = st.slider("Substrate Affinity Constant (mM)", 0.0, 500.0, 10.0, 1.0)
     Ko     = st.slider("Oxygen Affinity Constant (mM)", 0.0, 0.50, 0.02, 0.005)
-    Yxs    = st.slider("Biomass Yield Coefficient (g of X / mM S) (scaled)", 1e-6, 10.0, 0.1)
+    Yxs    = st.slider("Biomass Yield Coefficient (g of X / mM S) (scaled)", 0.01, 10.0, 0.1)
     X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
     S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
-    
+
     our_mode = st.selectbox("OUR definition", ["biomass-linked", "growth-linked"])
     if our_mode == "biomass-linked": # if growth-linked, Yxs is sufficient
         qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (gX·h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
