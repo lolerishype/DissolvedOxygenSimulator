@@ -128,11 +128,11 @@ with col1:
         x=t_label,
         y=["Biomass (g/L)", "DO Concentration (mM)"],  
         title="Biomass Growth and Oxygen Consumption",
-        labels={"value": "Concentration", "variable": "Metric"}
+        labels={"value": "Concentrations", "variable": "Concentration Type"}
     )
     fig1.add_hline(y=DO_min, line_dash="dash")
 
-    fig1.update_traces(patch={"line": {"color": "blue"}}, selector={"name": "Biomass (g/L)"})
+    fig1.update_traces(patch={"line": {"color": "green"}}, selector={"name": "Biomass (g/L)"})
 
     fig1.update_layout(
         title_font_size=20,
@@ -141,6 +141,15 @@ with col1:
         font_family="Computer Modern", 
         font_color="black",
         
+        legend=dict(
+            title_font_color="black",
+            orientation="h", # Horizontal layout
+            yanchor="top",
+            y=-0.2,                 
+            xanchor="center",
+            x=0.5,
+            ),
+
         xaxis=dict(
             title_font=dict(color="black"),
             tickfont=dict(color="black")
