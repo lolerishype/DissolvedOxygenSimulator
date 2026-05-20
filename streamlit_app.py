@@ -159,7 +159,13 @@ with col1:
         y="C (mM)", 
         title="Dissolved Oxygen Over Time"
         )
-    fig1.add_hline(y=DO_min, line_dash="dash")
+    fig1.add_hline(
+        y=DO_min, 
+        line_dash="dash", 
+        line_color="red", 
+        annotation_text="Critical DO Threshold", 
+        annotation_position="bottom right"
+    )
 
     fig1.update_layout(
         title_font_size=20,
