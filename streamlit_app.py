@@ -104,8 +104,7 @@ t_label = "t (min)" if show_minutes else "t (h)"
 
 df = pd.DataFrame({
     t_label: t_plot,
-    "DO Concentration (mM)": C,
-    "Biomass (g/L)": X,
+    "C (mM)": C,
     "OTR (mM/h)": OTR_t,
     "OUR (mM/h)": OUR_t
 })
@@ -124,15 +123,12 @@ col1, col2 = st.columns(2)
 
 with col1:
     fig1 = px.line(
-        df,
-        x=t_label,
-        y=["Biomass (g/L)", "DO Concentration (mM)"],  
-        title="Biomass and Oxygen Relation",
-        labels={"value": "Concentrations", "variable": "Concentration Type"}
-    )
+        df, 
+        x=t_label, 
+        y="C (mM)", 
+        title="Dissolved Oxygen Over Time"
+        )
     fig1.add_hline(y=DO_min, line_dash="dash")
-
-    fig1.update_traces(patch={"line": {"color": "green"}}, selector={"name": "Biomass (g/L)"})
 
     fig1.update_layout(
         title_font_size=20,
@@ -141,15 +137,6 @@ with col1:
         font_family="Computer Modern", 
         font_color="black",
         
-        legend=dict(
-            title_font_color="black",
-            orientation="h", # Horizontal layout
-            yanchor="top",
-            y=-0.2,                 
-            xanchor="center",
-            x=0.5,
-            ),
-
         xaxis=dict(
             title_font=dict(color="black"),
             tickfont=dict(color="black")
