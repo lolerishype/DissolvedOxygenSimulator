@@ -37,39 +37,34 @@ with st.sidebar:
 def rhs(t, y):
     C, X, S = y
     
-    # 1. Prevent negative concentrations from breaking the math
     C = max(C, 0.0)
     X = max(X, 0.0)
     S = max(S, 0.0)
     
-    # 2. Dynamic specific growth rate (Monod)
+    # 2. Continuous Specific Growth Rate (Monod)
     mu = mu_max * (S / (Ks + S)) * (C / (Ko + C))
     
-    # 3. Death phase logic: if substrate is depleted (< 0.01 mM), cells die
+    # 3. Death phase logic
     if S < 0.01:
-        current_kd = kd  # Cells die off at rate kd
-        mu = 0.0         # Growth completely stops
+        current_kd = kd  
     else:
-        current_kd = 0.0 # Standard growth phase, no massive die-off yet
+        current_kd = 0.0 
 
-    # 4. Biomass equation (Growth minus Death)
+    # 4. Biomass & Substrate Equations
     dXdt = (mu - current_kd) * X
-    
-    # 5. Substrate equation
     dSdt = -(mu * X) / Yxs
     
-    # 6. Dynamic Oxygen uptake (OUR)
-    # If cells are dead/dying and growth stops, OUR drops to 0
-    if mu > 0:
-        if consumption_mode == "Biomass Linked":
-            OUR = qO2 * X * (C / (Ko + C))
-        else:
-            OUR = (mu * X) / YxO2
+    # 5. Smooth, continuous Oxygen Uptake (OUR)
+    if consumption_mode == "Biomass Linked":
+        OUR = qO2 * X * (C / (Ko + C)) * (S / (Ks + S + 1e-6))
     else:
-        OUR = 0.0  # Dead cells don't breathe!
+        # OUR approaches zero as mu smoothly drops to 0
+        OUR = (mu * X) / YxO2
 
-    # 7. Dissolved Oxygen equation (OTR - OUR)
+    # 6. Smooth Oxygen Transfer (OTR)
     OTR = kLa * (Cstar - C)
+    
+    # 7. Dissolved Oxygen Equation
     dCdt = OTR - OUR
     
     return [dCdt, dXdt, dSdt]
@@ -99,6 +94,7 @@ if not sol.success:
     st.error(sol.message)
     st.stop()
 
+"""
 # Check if the simulation stopped early due to an event
 if sol.status == 1:
     # Check if substrate depleted
@@ -110,12 +106,28 @@ if sol.status == 1:
     elif len(sol.t_events[1]) > 0:
         t_ox = sol.t_events[1][0]
         st.info(f"Simulation stopped early: oxygen depleted (DO reached 0) at t = {t_ox:.3f} h.")
+"""
 
 t_h = sol.t
 C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
-mu_t = mu_max * (S/(Ks+S+1e-12)) * (C/(Ko+C+1e-12))
-OUR_t = qO2*X if consumption_mode=="Biomass Linked" else (1.0/YxO2)*mu_t*X
-OTR_t = kLa*(Cstar - C)
+mu_t = np.zeros_like(sol.t)
+OUR_t = np.zeros_like(sol.t)
+OTR_t = np.zeros_like(sol.t)
+
+for i in range(len(sol.t)):
+    c_val = max(sol.y[0][i], 0.0)
+    x_val = max(sol.y[1][i], 0.0)
+    s_val = max(sol.y[2][i], 0.0)
+    
+    mu_val = mu_max * (s_val / (Ks + s_val)) * (c_val / (Ko + c_val))
+    mu_t[i] = mu_val
+    
+    if consumption_mode == "Biomass Linked":
+        OUR_t[i] = qO2 * x_val * (c_val / (Ko + c_val)) * (s_val / (Ks + s_val + 1e-6))
+    else:
+        OUR_t[i] = (1.0 / YxO2) * mu_val * x_val
+       
+    OTR_t[i] = kLa * (Cstar - c_val)
 
 show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
 t_plot = 60.0 * t_h if show_minutes else t_h
