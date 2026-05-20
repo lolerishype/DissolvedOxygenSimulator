@@ -21,9 +21,10 @@ with st.sidebar:
     Yxs    = st.slider("Biomass Yield Coefficient on Substrate (g of X / mM S) (scaled)", 1e-6, 10.0, 0.1)
     X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
     S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
+    kd = st.sidebar.slider("Death Rate Constant (1/h)", 0.0, 0.2, 0.05, 0.01)
 
-    our_mode = st.selectbox("Oxygen Uptake Definition", ["Biomass Linked", "Growth Linked"])
-    if our_mode == "Biomass Linked": 
+    consumption_mode = st.selectbox("Oxygen Uptake Definition", ["Biomass Linked", "Growth Linked"])
+    if consumption_mode == "Biomass Linked": 
         qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (g of X · h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
     else: # if growth-linked, Yxs is sufficient
         YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.05)
@@ -35,25 +36,43 @@ with st.sidebar:
 
 def rhs(t, y):
     C, X, S = y
-
-    # Prevent negative values from causing weird kinetics
+    
+    # 1. Prevent negative concentrations from breaking the math
     C = max(C, 0.0)
     X = max(X, 0.0)
     S = max(S, 0.0)
+    
+    # 2. Dynamic specific growth rate (Monod)
+    mu = mu_max * (S / (Ks + S)) * (C / (Ko + C))
+    
+    # 3. Death phase logic: if substrate is depleted (< 0.01 mM), cells die
+    if S < 0.01:
+        current_kd = kd  # Cells die off at rate kd
+        mu = 0.0         # Growth completely stops
+    else:
+        current_kd = 0.0 # Standard growth phase, no massive die-off yet
 
-    mu = mu_max * (S / (Ks + S + 1e-12)) * (C / (Ko + C + 1e-12))
+    # 4. Biomass equation (Growth minus Death)
+    dXdt = (mu - current_kd) * X
+    
+    # 5. Substrate equation
+    dSdt = -(mu * X) / Yxs
+    
+    # 6. Dynamic Oxygen uptake (OUR)
+    # If cells are dead/dying and growth stops, OUR drops to 0
+    if mu > 0:
+        if consumption_mode == "Biomass Linked":
+            OUR = qO2 * X * (C / (Ko + C))
+        else:
+            OUR = (mu * X) / YxO2
+    else:
+        OUR = 0.0  # Dead cells don't breathe!
 
-    dX = mu * X
-    dS = -(1.0 / Yxs) * mu * X
-
-    if our_mode == "Biomass Linked":
-        OUR = qO2 * X  # mM/h
-    else:  # growth-linked
-        OUR = (1.0 / YxO2) * mu * X  # mM/h
-
-    dC = kLa * (Cstar - C) - OUR
-
-    return [dC, dX, dS]
+    # 7. Dissolved Oxygen equation (OTR - OUR)
+    OTR = kLa * (Cstar - C)
+    dCdt = OTR - OUR
+    
+    return [dCdt, dXdt, dSdt]
 
 t_eval = np.linspace(0, tf, n)
 
@@ -63,14 +82,14 @@ def event_substrate_depleted(t, y):
     C, X, S = y
     return S - S_min_stop
 
-event_substrate_depleted.terminal = True
+event_substrate_depleted.terminal = False # Use True if not simulating death behaviour
 event_substrate_depleted.direction = -1 # tells sim to only stop if S DROPPED to zero
 
 def do_dropped_to_zero(t, y):
     C, X, S = y
     return C
 
-do_dropped_to_zero.terminal = True
+do_dropped_to_zero.terminal = False
 do_dropped_to_zero.direction = -1
 
 y0 = [C0, X0, S0]
@@ -95,7 +114,7 @@ if sol.status == 1:
 t_h = sol.t
 C = sol.y[0]; X = sol.y[1]; S = sol.y[2]
 mu_t = mu_max * (S/(Ks+S+1e-12)) * (C/(Ko+C+1e-12))
-OUR_t = qO2*X if our_mode=="Biomass Linked" else (1.0/YxO2)*mu_t*X
+OUR_t = qO2*X if consumption_mode=="Biomass Linked" else (1.0/YxO2)*mu_t*X
 OTR_t = kLa*(Cstar - C)
 
 show_minutes = st.sidebar.checkbox("Show time in minutes", value=True)
