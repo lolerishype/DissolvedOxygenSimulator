@@ -10,21 +10,21 @@ st.markdown("<h1 style='text-align: center;'>Microorganism Growth and Dissolved 
 
 with st.sidebar:
     st.header("Oxygen Transfer")
-    kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 0.0, 500.0, 250.0, 1.0)
-    Cstar = st.slider("Saturated DO Concentration (mM)", 0.0, 1.0, 0.25, 0.01)
-    C0 = st.slider("Initial DO Concentration (mM)", 0.0, 0.50, 0.20, 0.01)
+    kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 1e-6, 500.0, 250.0, 1.0)
+    Cstar = st.slider("Saturated DO Concentration (mM)", 1e-6, 1.0, 0.25, 0.01)
+    C0 = st.slider("Initial DO Concentration (mM)", 1e-6, 0.50, 0.20, 0.01)
 
     st.header("Oxygen Demand")   
-    mu_max = st.slider("Organism Maximum Growth Rate (1/h)", 0.0, 2.0, 0.4, 0.01)
-    Ks = st.slider("Substrate Affinity Constant (mM)", 0.0, 10.0, 0.5, 1.0)
+    mu_max = st.slider("Organism Maximum Growth Rate (1/h)", 1e-6, 2.0, 0.4, 0.01)
+    Ks = st.slider("Substrate Affinity Constant (mM)", 1e-6, 10.0, 0.5, 1.0)
     Yxs    = st.slider("Biomass Yield Coefficient on Substrate (g of X / mM S) (scaled)", 1e-6, 10.0, 0.1)
-    X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
-    S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
-    kd = st.sidebar.slider("Death Rate Constant (1/h)", 0.0, 0.2, 0.05, 0.01)
+    X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 1e-6, 10.0, 0.2, 0.01)
+    S0 = st.slider("Initial Substrate Concentration (mM)", 1e-6, 1000.0, 100.0, 1.0)
+    kd = st.sidebar.slider("Death Rate Constant (1/h)", 1e-6, 0.2, 0.05, 0.01)
 
     consumption_mode = st.selectbox("Oxygen Uptake Definition", ["Biomass Linked", "Growth Linked"])
     if consumption_mode == "Biomass Linked": 
-        qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (g of X · h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
+        qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (g of X · h)) (scaled)", 1e-6, 50.0, 5.0, 0.1)
     else: # if growth-linked, Yxs is sufficient
         YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.05)
 
