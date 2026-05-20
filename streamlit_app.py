@@ -31,7 +31,7 @@ with st.sidebar:
     st.header("Simulation")
     tf = st.slider("End Time (h)", 0.1, 48.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
-    DO_min = st.slider("Minimum Safe DO Concentration (mM)", 0.0, 0.30, 0.05, 0.01)
+    DO_min = st.slider("Minimum Safe DO Concentration (mM)", 1e-6, 0.30, 0.05, 0.01)
     Ko = 0.2 * DO_min # backed by literature, see README
 
 def rhs(t, y):
