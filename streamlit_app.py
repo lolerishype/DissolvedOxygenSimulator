@@ -26,12 +26,12 @@ with st.sidebar:
     if consumption_mode == "Biomass Linked": 
         qO2 = st.slider("Specfic Oxygen Uptake Rate (mM O2 / (g of X · h)) (scaled)", 0.0, 50.0, 5.0, 0.1)
     else: # if growth-linked, Yxs is sufficient
-        YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-3, 10.0, 0.05)
+        YxO2 = st.slider("Biomass Yield Coefficient on Oxygen (g of X / mM O2) (scaled)", 1e-6, 10.0, 0.05)
 
     st.header("Simulation")
     tf = st.slider("End Time (h)", 0.1, 48.0, 6.0, 0.1)
     n = st.slider("Time Points", 100, 2000, 600, 50)
-    DO_min = st.slider("Minimum Safe DO Concentration (mM)", 1e-6, 0.30, 0.05, 0.01)
+    DO_min = st.slider("Minimum Safe DO Concentration (mM)", 1e-3, 0.30, 0.05, 0.01)
     Ko = 0.2 * DO_min # backed by literature, see README
 
 def rhs(t, y):
