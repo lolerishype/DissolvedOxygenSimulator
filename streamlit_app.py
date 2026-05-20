@@ -16,8 +16,8 @@ with st.sidebar:
 
     st.header("Oxygen Demand")   
     mu_max = st.slider("Organism Maximum Growth Rate (1/h)", 0.0, 2.0, 0.4, 0.01)
-    Ks     = st.slider("Substrate Affinity Constant (mM)", 0.0, 10.0, 0.5, 1.0)
-    Ko     = st.slider("Oxygen Affinity Constant (mM)", 0.0, 1.0, 0.05, 0.005)
+    Ks = st.slider("Substrate Affinity Constant (mM)", 0.0, 10.0, 0.5, 1.0)
+    Ko = 0.2 * DO_min # backed by literature, see README
     Yxs    = st.slider("Biomass Yield Coefficient on Substrate (g of X / mM S) (scaled)", 1e-6, 10.0, 0.1)
     X0 = st.slider("Initial Biomass Concentration (gX/L) (scaled)", 0.0, 10.0, 0.2, 0.01)
     S0 = st.slider("Initial Substrate Concentration (mM)", 0.0, 1000.0, 100.0, 1.0)
