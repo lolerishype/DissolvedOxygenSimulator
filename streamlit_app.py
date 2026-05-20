@@ -157,7 +157,7 @@ with col1:
         df, 
         x=t_label, 
         y="C (mM)", 
-        title="Dissolved Oxygen Over Time"
+        title="Dissolved Oxygen Concentration Over Time"
         )
     fig1.add_hline(
         y=DO_min, 
