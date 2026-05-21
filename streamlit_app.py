@@ -174,7 +174,7 @@ with row1_col2:
 row2_col1, row2_col2 = st.columns(2)
 
 with row2_col1:
-    fig2 = px.line(df, x=t_label, y="OTR (mM/h)", title="Oxygen Transfer Rate (OTR) Over Time", labels={"value": "OTR (mM/h)"})
+    fig2 = px.line(df, x=t_label, y="OTR (mM/h)", title="Oxygen Transfer Rate Over Time", labels={"value": "OTR (mM/h)"})
     fig2.update_traces(line=dict(color="green"))
     fig2.update_layout(title_font_size=20, title_x=0.5, title_xanchor="center", font_family="Computer Modern", font_color="black",
                        xaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")),
@@ -182,7 +182,7 @@ with row2_col1:
     st.plotly_chart(fig2, use_container_width=True)
 
 with row2_col2:
-    fig3 = px.line(df, x=t_label, y="OUR (mM/h)", title="Oxygen Uptake Rate (OUR) Over Time", labels={"value": "OUR (mM/h)"})
+    fig3 = px.line(df, x=t_label, y="OUR (mM/h)", title="Oxygen Uptake Rate Over Time", labels={"value": "OUR (mM/h)"})
     fig3.update_traces(line=dict(color="red"))
     fig3.update_layout(title_font_size=20, title_x=0.5, title_xanchor="center", font_family="Computer Modern", font_color="black",
                        xaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")),
