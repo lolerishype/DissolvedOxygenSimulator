@@ -7,7 +7,7 @@ from scipy.integrate import solve_ivp
 
 st.set_page_config(page_title="DO Crash Explorer", layout="wide",)
 st.markdown("<h1 style='text-align: center;'>Microorganism Growth and Dissolved Oxygen (DO) Relation Simulator: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)</h1>", unsafe_allow_html=True)
-sploxyge
+
 with st.sidebar:
     st.header("Oxygen Transfer")
     kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 1e-6, 500.0, 250.0, 1.0)
