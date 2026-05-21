@@ -7,7 +7,7 @@ from scipy.integrate import solve_ivp
 
 st.set_page_config(page_title="DO Crash Explorer", layout="wide",)
 st.markdown("<h1 style='text-align: center;'>Microorganism Growth and Dissolved Oxygen (DO) Relation Simulator: Oxygen Transfer (OTR) vs Oxygen Uptake (OUR)</h1>", unsafe_allow_html=True)
-
+sploxyge
 with st.sidebar:
     st.header("Oxygen Transfer")
     kLa = st.slider("Volumetric Mass Transfer Coefficient (1/h)", 1e-6, 500.0, 250.0, 1.0)
@@ -138,6 +138,7 @@ df = pd.DataFrame({
     "C (mM)": C,
     "OTR (mM/h)": OTR_t,
     "OUR (mM/h)": OUR_t
+    "X (g/L)": X
 })
 
 # This allows the label and plot to be dynamic of the user's choosing.
@@ -150,81 +151,43 @@ C_ss = np.nan # assume steady state does not exist first
 if kLa > 1e-12:
     C_ss = Cstar - OUR_t[-1] / kLa  # steady-state if it exists (get final element)
 
-col1, col2 = st.columns(2)
+row1_col1, row1_col2 = st.columns(2)
 
-with col1:
-    fig1 = px.line(
-        df, 
-        x=t_label, 
-        y="C (mM)", 
-        title="Dissolved Oxygen Concentration Over Time"
-        )
-    fig1.add_hline(
-        y=DO_min, 
-        line_dash="dash", 
-        line_color="red", 
-        annotation_text="Critical DO Threshold", 
-        annotation_position="bottom right"
-    )
-
-    fig1.update_layout(
-        title_font_size=20,
-        title_x=0.5, 
-        title_xanchor="center",
-        font_family="Computer Modern", 
-        font_color="black",
-        
-        xaxis=dict(
-            title_font=dict(color="black"),
-            tickfont=dict(color="black")
-        ),
-        
-        yaxis=dict(
-            title_font=dict(color="black"),
-            tickfont=dict(color="black")
-        )
-    )
+with row1_col1:
+    fig1 = px.line(df, x=t_label, y="C (mM)", title="Dissolved Oxygen Concentration Over Time")
+    fig1.add_hline(y=DO_min, line_dash="dash", line_color="red", annotation_text="Critical DO Threshold", annotation_position="bottom right")
+    fig1.update_layout(title_font_size=20, title_x=0.5, title_xanchor="center", font_family="Computer Modern", font_color="black",
+                       xaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")),
+                       yaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")))
     st.plotly_chart(fig1, use_container_width=True)
 
-with col2:
-    fig2 = px.line(
-        df, 
-        x=t_label, 
-        y=["OTR (mM/h)", "OUR (mM/h)"], 
-        title="Oxygen Rates Over Time", 
-        labels={"value": "Rate (mM/h)", "variable": "Oxygen Rate"}
-    )
-    
-    fig2.update_traces(patch={"line": {"color": "green"}}, selector={"name": "OTR (mM/h)"})
-    fig2.update_traces(patch={"line": {"color": "red"}}, selector={"name": "OUR (mM/h)"})
-    
-    fig2.update_layout(
-        title_font_size=20,
-        title_x=0.5, 
-        title_xanchor="center",
-        font_family="Computer Modern",  
-        font_color="black",
-        
-        legend=dict(
-            title_font_color="black",
-            orientation="h", # Horizontal layout
-            yanchor="top",
-            y=-0.2,                 
-            xanchor="center",
-            x=0.5,
-            ),
-        
-        xaxis=dict(
-            title_font=dict(color="black"),
-            tickfont=dict(color="black")
-        ),
-    
-        yaxis=dict(
-            title_font=dict(color="black"),
-            tickfont=dict(color="black")
-        )
-    )
+with row1_col2:
+    # Biomass (X) graph over Time
+    # Note: If your dataframe 'df' sets biomass to a different column name (like "X"), update the y parameter below.
+    fig4 = px.line(df, x=t_label, y="X (g/L)", title="Biomass Concentration Over Time", labels={"value": "X (g/L)"})
+    fig4.update_traces(line=dict(color="blue"))
+    fig4.update_layout(title_font_size=20, title_x=0.5, title_xanchor="center", font_family="Computer Modern", font_color="black",
+                       xaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")),
+                       yaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")))
+    st.plotly_chart(fig4, use_container_width=True)
+
+row2_col1, row2_col2 = st.columns(2)
+
+with row2_col1:
+    fig2 = px.line(df, x=t_label, y="OTR (mM/h)", title="Oxygen Transfer Rate (OTR) Over Time", labels={"value": "OTR (mM/h)"})
+    fig2.update_traces(line=dict(color="green"))
+    fig2.update_layout(title_font_size=20, title_x=0.5, title_xanchor="center", font_family="Computer Modern", font_color="black",
+                       xaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")),
+                       yaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")))
     st.plotly_chart(fig2, use_container_width=True)
+
+with row2_col2:
+    fig3 = px.line(df, x=t_label, y="OUR (mM/h)", title="Oxygen Uptake Rate (OUR) Over Time", labels={"value": "OUR (mM/h)"})
+    fig3.update_traces(line=dict(color="red"))
+    fig3.update_layout(title_font_size=20, title_x=0.5, title_xanchor="center", font_family="Computer Modern", font_color="black",
+                       xaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")),
+                       yaxis=dict(title_font=dict(color="black"), tickfont=dict(color="black")))
+    st.plotly_chart(fig3, use_container_width=True)
 
 st.subheader("Results")
 c1, c2, c3, c4 = st.columns(4)
