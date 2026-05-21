@@ -137,8 +137,8 @@ df = pd.DataFrame({
     t_label: t_plot,
     "C (mM)": C,
     "OTR (mM/h)": OTR_t,
-    "OUR (mM/h)": OUR_t
-    "X (g/L)": X
+    "OUR (mM/h)": OUR_t,
+    "X (g/L)": X,
 })
 
 # This allows the label and plot to be dynamic of the user's choosing.
